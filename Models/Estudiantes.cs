@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 
-public class Estudiantes
+namespace Ejercicio1_2020_03.Models{
+    public class Estudiantes
     {
         [Key]
         public int EstudianteId { get; set; }
@@ -10,10 +11,6 @@ public class Estudiantes
 
         [Range(minimum:1, maximum:10,ErrorMessage ="Seleccione un semestre")]
         public int Semestre { get; set; }
-
-
-    
-
-       
-
     }
+}
+

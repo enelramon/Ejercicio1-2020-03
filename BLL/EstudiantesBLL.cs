@@ -1,6 +1,14 @@
-public class EstudiantesBLL
+using Ejercicio1_2020_03.Models;
+using Ejercicio1_2020_03.DAL;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Linq;
+
+namespace Ejercicio1_2020_03.BLL
 {
-/// <summary>
+    public class EstudiantesBLL
+    {
+        /// <summary>
         /// Permite insertar o modificar una entidad en la base de datos
         /// </summary>
         /// <param name="estudiante">La entidad que se desea guardar</param> 
@@ -50,13 +58,6 @@ public class EstudiantesBLL
 
             try
             {
-                contexto.Database.ExecuteSqlRaw($"Delete FROM EstudiantesDetalle Where EstudianteId = {estudiante.EstudianteId}");
-
-                foreach (var item in estudiante.EstudiantesDetalle)
-                {
-                    contexto.Entry(item).State = EntityState.Added;
-                }
-
                 //marcar la entidad como modificada para que el contexto sepa como proceder
                 contexto.Entry(estudiante).State = EntityState.Modified;
                 paso = contexto.SaveChanges() > 0;
@@ -73,7 +74,7 @@ public class EstudiantesBLL
         }
 
            public static bool Existe(int id)
-        {
+            {
             Contexto contexto = new Contexto();
             bool encontrado = false;
 
@@ -91,5 +92,26 @@ public class EstudiantesBLL
             }
 
             return encontrado;
-        }
+            }
+
+            public static Estudiantes Buscar(int id)
+            {
+                Contexto contexto = new Contexto();
+                Estudiantes estudiante = new Estudiantes();
+
+                try
+                {
+                    estudiante = contexto.Estudiantes.Find(id);
+                }
+                catch
+                {
+                    throw;
+                }   
+                finally
+                {
+                    contexto.Dispose();
+                }
+                return estudiante; 
+            }
+    }
 }
