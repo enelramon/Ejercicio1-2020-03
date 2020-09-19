@@ -26,7 +26,10 @@ namespace Ejercicio1_2020_03
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            
+            //    services.AddDbContext<Contexto>(op =>
+            //         op.UseSqlite(Configuration.GetConnectionString("DefaultConnection"))
+            //     );
+
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();

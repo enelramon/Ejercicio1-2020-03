@@ -1,0 +1,121 @@
+@page "/Estudiantes"
+@page "/Estudiantes/{EstudianteId:int}"
+
+
+<EditForm Model="Estudiante" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+    <div class="card">
+        <div class="card-header">
+            <h3>Registro de Estudiantes</h3>
+        </div>
+        <div class="card-body">
+            <form>
+                @*EstudianteId*@
+                <div class="form-row align-items-center">
+                    <div class="col">
+                        <div class="form-group">
+                            <label>EstudianteId</label>
+                            <div class="input-group">
+                                <InputNumber @bind-Value="Estudiante.EstudianteId" class="form-control col-4" />
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-primary input-group-text" @onclick="Buscar">Buscar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @*Nombres*@
+                <div class="form-group">
+                    <label>Nombres</label>
+                    <InputText @bind-Value="Estudiante.Nombres" class="form-control" />
+                    <ValidationMessage For="@(() => Estudiante.Nombres)" />
+                </div>
+
+                @*Semestre*@
+                <div class="form-group">
+                    <label>Semestre</label>
+                    <InputNumber @bind-Value="Estudiante.Semestre"
+                                 class="form-control" />
+                    <ValidationMessage For="@(() => Estudiante.Semestre)" />
+                </div>               
+       
+            </form>
+        </div>
+        <div class="card-footer">
+            <div class="form-group text-center" display: inline-block>
+                <button type="button" class="btn btn-lg btn-primary" @onclick="Nuevo">Nuevo</button>
+                <button type="submit" class="btn btn-lg btn-success">Guardar</button>
+                <button type="button" class="btn btn-lg btn-danger" @onclick="Eliminar">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    [Parameter]
+    public int EstudianteId { get; set; }
+
+    private Estudiantes Estudiante = new Estudiantes();
+    private string TipoSeleccionado = "0";
+    private string TelefonoSeleccionado;
+
+    protected override void OnInitialized()
+    {
+        Nuevo(); //siempre se hace nuevo
+
+        Buscar(); //solo hace efecto si se paso un id por parametro
+    }
+
+    public void Nuevo()
+    {
+        Estudiante = new Estudiantes();
+    }
+
+   
+
+    private void Buscar()
+    {
+        if (Estudiante.EstudianteId > 0)
+        {
+            var encontrado = EstudiantesBLL.Buscar(Estudiante.EstudianteId);
+
+            if (encontrado != null)
+                this.Estudiante = encontrado;
+            else
+                //toast.ShowWarning("No encontrado");
+        }
+    }
+
+    public void Guardar()
+    {
+        bool guardo;
+       
+        guardo = EstudiantesBLL.Guardar(Estudiante);
+
+        if (guardo)
+        {
+            Nuevo();
+            //toast.ShowSuccess("Guardado correctamente");
+        }
+        else
+            //toast.ShowError("No fue posible guardar");
+    }
+
+    public void Eliminar()
+    {
+        bool elimino;
+
+        elimino = EstudiantesBLL.Eliminar(Estudiante.EstudianteId);
+
+        if (elimino)
+        {
+            Nuevo();
+            //toast.ShowSuccess("Eliminado correctamente");
+        }
+        else
+            //toast.ShowError("No fue posible eliminar");
+    }
+
+
+}
